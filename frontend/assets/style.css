@@ -3,6 +3,7 @@
    ═══════════════════════════════════════════════════════ */
 
 :root {
+  /* Colors */
   --color-void-black: #040506;
   --color-deep-charcoal: #07080a;
   --color-graphite-700: #111214;
@@ -17,16 +18,80 @@
   --color-ember-dark: #452324;
   --color-mint-signal: #59d499;
   --color-sky-signal: #56c2ff;
-
+  --gradient-sky-signal: linear-gradient(135deg, rgb(86, 194, 255) 0%, rgb(19, 138, 242) 100%);
+  --color-nebula-glow: #043f96;
   --gradient-nebula-glow: radial-gradient(84.6% 73.49% at 50% 26.51%, rgba(4, 63, 150, 0.7), rgba(6, 18, 37, 0.25));
+  --color-violet-haze: #523091;
   --gradient-violet-haze: radial-gradient(86.88% 75.47% at 50% 24.53%, rgba(82, 48, 145, 0.7), rgba(26, 11, 51, 0.14));
 
-  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  /* Typography */
+  --font-inter: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --shadow-subtle: rgba(0,0,0,0.4) 0px 1.5px 0.5px 2.5px, rgb(0,0,0) 0px 0px 0.5px 1px, rgba(0,0,0,0.25) 0px 2px 1px 1px inset, rgba(255,255,255,0.2) 0px 1px 1px 1px inset;
-  --shadow-card: rgba(255,255,255,0.05) 0px 1px 0px 0px inset, rgba(255,255,255,0.06) 0px 0px 0px 1px inset;
-  --shadow-xl: rgba(0,0,0,0.4) 0px 4px 40px 8px, rgba(0,0,0,0.8) 0px 0px 0px 0.5px, rgba(255,255,255,0.3) 0px 0.5px 0px 0px inset;
+  /* Type Scale */
+  --text-caption: 11px;
+  --leading-caption: 1.45;
+  --tracking-caption: 0.8px;
+  --text-body: 16px;
+  --leading-body: 1.5;
+  --tracking-body: 0.1px;
+  --text-subheading: 18px;
+  --leading-subheading: 1.4;
+  --tracking-subheading: 0.06px;
+  --text-heading-sm: 24px;
+  --leading-heading-sm: 1.33;
+  --tracking-heading-sm: -0.05px;
+  --text-heading: 32px;
+  --leading-heading: 1.2;
+  --tracking-heading: -0.06px;
+  --text-heading-lg: 56px;
+  --leading-heading-lg: 1.1;
+  --tracking-heading-lg: -0.11px;
+  --text-display: 64px;
+  --leading-display: 1;
+  --tracking-display: -0.13px;
+
+  /* Spacing */
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-96: 96px;
+  --spacing-120: 120px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 80px;
+  --card-padding: 24px;
+  --element-gap: 15px;
+
+  /* Border Radius */
+  --radius-cards: 11px;
+  --radius-badges: 6px;
+  --radius-inputs: 8px;
+  --radius-modals: 16px;
+  --radius-buttons: 8px;
+  --radius-cardlarge: 20px;
+  --radius-buttonpill: 86px;
+
+  /* Shadows */
+  --shadow-subtle: rgba(0, 0, 0, 0.4) 0px 1.5px 0.5px 2.5px, rgb(0, 0, 0) 0px 0px 0.5px 1px, rgba(0, 0, 0, 0.25) 0px 2px 1px 1px inset, rgba(255, 255, 255, 0.2) 0px 1px 1px 1px inset;
+  --shadow-subtle-2: rgb(27, 28, 30) 0px 0px 0px 1px, rgb(7, 8, 10) 0px 0px 0px 1px inset;
+  --shadow-card: rgba(255, 255, 255, 0.05) 0px 1px 0px 0px inset, rgba(255, 255, 255, 0.25) 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px -1px 0px 0px inset;
+  --shadow-lg: rgba(215, 201, 175, 0.05) 0px 0px 20px 5px, rgba(215, 201, 175, 0.05) 0px 0px 16px -7px;
+  --shadow-xl: rgba(0, 0, 0, 0.4) 0px 4px 40px 8px, rgba(0, 0, 0, 0.8) 0px 0px 0px 0.5px, rgba(255, 255, 255, 0.3) 0px 0.5px 0px 0px inset;
+  --shadow-sm: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;
+  --shadow-inset: rgba(255, 255, 255, 0.1) 0px 1px 0px 0px inset;
+
+  /* Surfaces */
+  --surface-canvas: #040506;
+  --surface-base: #07080a;
+  --surface-raised: #111214;
+  --surface-overlay: #1b1c1e;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,12 +104,14 @@ html {
 
 body {
   font-family: var(--font-inter);
-  background: var(--color-void-black);
+  background: var(--surface-canvas);
   color: var(--color-snow);
-  line-height: 1.5;
-  font-size: 16px;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
   min-height: 100vh;
   overflow-x: hidden;
+  font-feature-settings: "calt", "kern", "liga", "ss03";
 }
 
 a { color: inherit; text-decoration: none; }
@@ -81,13 +148,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(7, 8, 10, 0.85);
+  background: rgba(27, 28, 30, 0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 11px;
+  border-radius: var(--radius-cards);
   padding: 8px 16px;
   height: 52px;
+  box-shadow: var(--shadow-subtle-2);
 }
 
 .nav-logo {
@@ -122,11 +190,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-8);
   font-size: 14px;
   font-weight: 500;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-buttons);
   transition: all 0.2s ease;
   white-space: nowrap;
 }
@@ -176,9 +244,9 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 .badge {
   display: inline-flex;
   align-items: center;
-  background: var(--color-graphite-600);
+  background: var(--surface-overlay);
   color: var(--color-snow);
-  border-radius: 6px;
+  border-radius: var(--radius-badges);
   padding: 2px 8px;
   font-size: 12px;
   font-weight: 500;
@@ -309,19 +377,20 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 .hero-title {
-  font-size: clamp(40px, 8vw, 64px);
+  font-size: clamp(40px, 8vw, var(--text-display));
   font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  margin-bottom: 24px;
-  font-feature-settings: "ss03";
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  margin-bottom: var(--spacing-24);
+  font-feature-settings: "calt", "kern", "liga", "ss03";
 }
 
 .hero-subtitle {
-  font-size: 18px;
+  font-size: var(--text-subheading);
   color: var(--color-slate-200);
-  line-height: 1.5;
-  margin-bottom: 40px;
+  line-height: var(--leading-subheading);
+  letter-spacing: var(--tracking-subheading);
+  margin-bottom: var(--spacing-40);
   max-width: 560px;
   margin-left: auto;
   margin-right: auto;
@@ -350,10 +419,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   letter-spacing: -0.02em;
 }
 .stat-label {
-  font-size: 13px;
+  font-size: var(--text-caption);
   color: var(--color-slate-300);
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  letter-spacing: var(--tracking-caption);
   text-transform: uppercase;
 }
 .stat-divider {
@@ -365,7 +434,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 /* ── Sections ───────────────────────────────────────── */
 .section {
   position: relative;
-  padding: 80px 0;
+  padding: var(--section-gap) 0;
 }
 
 .section-glow {
@@ -381,20 +450,22 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 .section-glow--violet { background: var(--gradient-violet-haze); opacity: 0.3; }
 
 .section-title {
-  font-size: 32px;
+  font-size: var(--text-heading);
   font-weight: 600;
   text-align: center;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-heading);
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
 }
 
 .section-subtitle {
-  font-size: 16px;
+  font-size: var(--text-body);
   color: var(--color-slate-200);
   text-align: center;
-  margin-bottom: 48px;
+  letter-spacing: var(--tracking-body);
+  margin-bottom: var(--spacing-48);
   position: relative;
   z-index: 1;
 }
@@ -411,9 +482,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 .feature-card {
   background: transparent;
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: var(--radius-modals);
+  padding: var(--card-padding);
   transition: border-color 0.2s ease;
+  box-shadow: var(--shadow-inset);
 }
 .feature-card:hover { border-color: rgba(255,255,255,0.12); }
 
@@ -428,9 +500,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 .feature-title {
-  font-size: 18px;
+  font-size: var(--text-subheading);
   font-weight: 600;
-  margin-bottom: 8px;
+  letter-spacing: var(--tracking-subheading);
+  margin-bottom: var(--spacing-8);
 }
 
 .feature-desc {
@@ -451,11 +524,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 .pricing-card {
-  background: var(--color-deep-charcoal);
+  background: var(--surface-base);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: var(--radius-modals);
+  padding: var(--spacing-32);
   position: relative;
+  box-shadow: var(--shadow-inset);
 }
 
 .pricing-card--premium {
@@ -558,11 +632,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   position: relative;
   text-align: center;
   max-width: 440px;
-  padding: 48px;
-  background: var(--color-deep-charcoal);
+  padding: var(--spacing-48);
+  background: var(--surface-base);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 20px;
+  border-radius: var(--radius-cardlarge);
   overflow: hidden;
+  box-shadow: var(--shadow-xl);
 }
 
 /* ── Dashboard ──────────────────────────────────────── */
@@ -613,11 +688,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 .dash-stat-card {
-  background: var(--color-deep-charcoal);
+  background: var(--surface-base);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 11px;
+  border-radius: var(--radius-cards);
   padding: 20px;
   text-align: center;
+  box-shadow: var(--shadow-inset);
 }
 
 .dash-stat-label {
@@ -659,10 +735,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 .key-card {
-  background: var(--color-deep-charcoal);
+  background: var(--surface-base);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 11px;
+  border-radius: var(--radius-cards);
   padding: 20px;
+  box-shadow: var(--shadow-inset);
 }
 
 .key-header {
@@ -702,10 +779,10 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   flex: 1;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 8px;
+  border-radius: var(--radius-inputs);
   padding: 8px 12px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--text-caption);
   color: var(--color-slate-200);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -937,11 +1014,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 /* ── Toast ──────────────────────────────────────────── */
 .toast {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--color-graphite-700);
+  bottom: var(--spacing-24);
+  right: var(--spacing-24);
+  background: var(--surface-raised);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 11px;
+  border-radius: var(--radius-cards);
   padding: 12px 20px;
   font-size: 14px;
   color: var(--color-snow);
