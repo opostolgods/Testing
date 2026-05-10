@@ -10,14 +10,15 @@ import secrets
 import time
 from typing import Optional
 
+import httpx
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from config import (
     BOT_TOKEN, BOT_USERNAME, ADMIN_IDS, SECRET_KEY,
-    DOMAIN, SUPPORT_USERNAME,
+    DOMAIN, SUPPORT_USERNAME, FREE_SERVER_IP,
 )
 from database import init_db, upsert_user, get_user, get_user_keys, save_key
 from database import deactivate_key, set_premium, get_all_users, get_all_keys, get_stats
@@ -227,6 +228,25 @@ async def get_config():
         "support": SUPPORT_USERNAME,
         "domain": DOMAIN,
     }
+
+
+# ── Subscription proxy ──────────────────────────────────
+
+SUB_SERVER_URL = os.getenv("SUB_SERVER_URL", f"http://{FREE_SERVER_IP}:8080")
+
+@app.get("/sub/{sub_id}")
+async def proxy_subscription(sub_id: str):
+    async with httpx.AsyncClient(timeout=10) as client:
+        try:
+            resp = await client.get(f"{SUB_SERVER_URL}/{sub_id}")
+        except httpx.RequestError:
+            raise HTTPException(502, "Subscription server unavailable")
+    headers = {}
+    for hdr in ("subscription-userinfo", "profile-update-interval", "profile-title"):
+        if hdr in resp.headers:
+            headers[hdr] = resp.headers[hdr]
+    return Response(content=resp.content, status_code=resp.status_code,
+                    media_type="text/plain", headers=headers)
 
 
 # ── Static files ────────────────────────────────────────

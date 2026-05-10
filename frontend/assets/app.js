@@ -346,8 +346,8 @@ async function loadAdminData() {
             ${users.map(u => `
               <tr>
                 <td>${u.telegram_id}</td>
-                <td>@${u.username || '—'}</td>
-                <td>${u.first_name || ''} ${u.last_name || ''}</td>
+                <td>@${escapeHtml(u.username || '—')}</td>
+                <td>${escapeHtml(u.first_name || '')} ${escapeHtml(u.last_name || '')}</td>
                 <td><span class="badge ${u.is_premium ? 'badge--premium' : 'badge--free'}">${u.is_premium ? 'Premium' : 'Free'}</span></td>
                 <td>${u.created_at ? new Date(u.created_at * 1000).toLocaleDateString('ru-RU') : '—'}</td>
                 <td>
@@ -372,8 +372,8 @@ async function loadAdminData() {
           <tbody>
             ${keys.map(k => `
               <tr>
-                <td style="font-family:var(--font-mono);font-size:12px">${k.email}</td>
-                <td>@${k.username || '—'}</td>
+                <td style="font-family:var(--font-mono);font-size:12px">${escapeHtml(k.email)}</td>
+                <td>@${escapeHtml(k.username || '—')}</td>
                 <td><span class="badge ${k.is_premium ? 'badge--premium' : 'badge--free'}">${k.is_premium ? 'Premium' : 'Free'}</span></td>
                 <td>${k.expiry_ms ? new Date(k.expiry_ms).toLocaleDateString('ru-RU') : '∞'}</td>
                 <td>${k.active ? '<span style="color:var(--color-mint-signal)">Active</span>' : '<span style="color:var(--color-slate-300)">Inactive</span>'}</td>

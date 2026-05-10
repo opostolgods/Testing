@@ -11,17 +11,17 @@ BOT_USERNAME = os.getenv("TELEGRAM_BOT_USERNAME", "CloudVPN_bestbot")
 ADMIN_IDS = [int(x) for x in os.getenv("TELEGRAM_ADMIN_ID", "7307243710").split(",") if x.strip()]
 
 # Free server 3X-UI
-FREE_SERVER_IP = "144.31.151.253"
-FREE_XUI_URL = os.getenv("FREE_XUI_URL", "http://144.31.151.253:9847/panel-8f3k2m")
-FREE_XUI_USER = os.getenv("FREE_XUI_USER", "vpnadmin")
-FREE_XUI_PASS = os.getenv("FREE_XUI_PASS", "XuiSecure9847!")
+FREE_SERVER_IP = os.getenv("FREE_SERVER_IP", "144.31.151.253")
+FREE_XUI_URL = os.getenv("FREE_XUI_URL", "")
+FREE_XUI_USER = os.getenv("FREE_XUI_USER", "")
+FREE_XUI_PASS = os.getenv("FREE_XUI_PASS", "")
 FREE_INBOUND_ID = int(os.getenv("FREE_INBOUND_ID", "3"))
 
 # Premium server 3X-UI
-PREMIUM_SERVER_IP = "87.120.187.116"
-PREMIUM_XUI_URL = os.getenv("PREMIUM_XUI_URL", "http://87.120.187.116:9847/panel-pr3m")
-PREMIUM_XUI_USER = os.getenv("PREMIUM_XUI_USER", "vpnadmin")
-PREMIUM_XUI_PASS = os.getenv("PREMIUM_XUI_PASS", "XuiSecure9847!")
+PREMIUM_SERVER_IP = os.getenv("PREMIUM_SERVER_IP", "87.120.187.116")
+PREMIUM_XUI_URL = os.getenv("PREMIUM_XUI_URL", "")
+PREMIUM_XUI_USER = os.getenv("PREMIUM_XUI_USER", "")
+PREMIUM_XUI_PASS = os.getenv("PREMIUM_XUI_PASS", "")
 PREMIUM_INBOUND_ID = int(os.getenv("PREMIUM_INBOUND_ID", "2"))
 
 # Subscription

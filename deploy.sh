@@ -1,41 +1,59 @@
 #!/bin/bash
-# CloudVPN deployment script for cloudvpn.best (87.120.187.116)
+# CloudVPN deployment script for cloudvpn.best
+# Requires: SSH_PASSWORD, TELEGRAM_BOT_TOKEN env vars
 set -e
 
-SERVER="87.120.187.116"
+SERVER="${DEPLOY_SERVER:-87.120.187.116}"
 DEPLOY_DIR="/opt/cloudvpn-site"
+
+if [ -z "$SSH_PASSWORD" ]; then
+  echo "ERROR: SSH_PASSWORD env var is required"
+  exit 1
+fi
 
 echo "=== Deploying CloudVPN to $SERVER ==="
 
 # Sync project files
 rsync -avz --exclude='venv' --exclude='__pycache__' --exclude='.git' \
-  -e "sshpass -p 'AzanovDED_21212827m' ssh -o StrictHostKeyChecking=no" \
+  -e "sshpass -p '$SSH_PASSWORD' ssh -o StrictHostKeyChecking=no" \
   ./ root@$SERVER:$DEPLOY_DIR/
 
+# Generate SECRET_KEY locally
+SECRET_KEY_VAL=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+
 # Setup on server
-sshpass -p 'AzanovDED_21212827m' ssh -o StrictHostKeyChecking=no root@$SERVER << 'REMOTE_SCRIPT'
+sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER << REMOTE_SCRIPT
 set -e
 
 DEPLOY_DIR="/opt/cloudvpn-site"
-cd $DEPLOY_DIR
+cd \$DEPLOY_DIR
 
 # Create data directory
 mkdir -p /opt/cloudvpn-site/data
 
-# Create .env file
-cat > $DEPLOY_DIR/backend/.env << 'ENVEOF'
-TELEGRAM_BOT_TOKEN=8799265922:AAGcRbD-H9Yx90UNzIlkVzk3G4KOkH_alNk
-TELEGRAM_ADMIN_ID=7307243710
+# Create .env file (only if not exists to preserve existing config)
+if [ ! -f \$DEPLOY_DIR/backend/.env ]; then
+cat > \$DEPLOY_DIR/backend/.env << ENVEOF
+TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-CHANGE_ME}
+TELEGRAM_ADMIN_ID=${TELEGRAM_ADMIN_ID:-CHANGE_ME}
 DOMAIN=cloudvpn.best
 DB_PATH=/opt/cloudvpn-site/data/users.db
-SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+SECRET_KEY=${SECRET_KEY_VAL}
+XUI_FREE_URL=${XUI_FREE_URL:-CHANGE_ME}
+XUI_FREE_USER=${XUI_FREE_USER:-CHANGE_ME}
+XUI_FREE_PASS=${XUI_FREE_PASS:-CHANGE_ME}
+XUI_PREMIUM_URL=${XUI_PREMIUM_URL:-CHANGE_ME}
+XUI_PREMIUM_USER=${XUI_PREMIUM_USER:-CHANGE_ME}
+XUI_PREMIUM_PASS=${XUI_PREMIUM_PASS:-CHANGE_ME}
 ENVEOF
+echo ".env created — please edit with actual credentials"
+fi
 
 # Install Python 3.10+ and create venv
 apt-get update -qq
 apt-get install -y -qq python3-pip python3-venv nginx certbot python3-certbot-nginx > /dev/null 2>&1
 
-cd $DEPLOY_DIR/backend
+cd \$DEPLOY_DIR/backend
 python3 -m venv venv
 source venv/bin/activate
 pip install -q -r requirements.txt
@@ -50,8 +68,8 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/cloudvpn-site/backend
-Environment=PATH=/opt/cloudvpn-site/backend/venv/bin:/usr/bin:/bin
-ExecStart=/opt/cloudvpn-site/backend/venv/bin/uvicorn app:app --host 127.0.0.1 --port 8000 --workers 2
+EnvironmentFile=/opt/cloudvpn-site/backend/.env
+ExecStart=/opt/cloudvpn-site/backend/venv/bin/uvicorn app:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 
@@ -69,14 +87,31 @@ server {
         root /var/www/certbot;
     }
 
+    root /opt/cloudvpn-site/frontend;
+    index index.html;
+
+    location /assets/ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_http_version 1.1;
+    }
+
     location / {
-        return 301 https://$host$request_uri;
+        try_files \$uri \$uri/ /index.html;
     }
 }
 
 server {
-    listen 443 ssl http2;
-    server_name cloudvpn.best www.cloudvpn.best;
+    listen 127.0.0.1:8443 ssl http2;
+    server_name cloudvpn.best;
 
     ssl_certificate /etc/letsencrypt/live/cloudvpn.best/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/cloudvpn.best/privkey.pem;
@@ -91,25 +126,25 @@ server {
     root /opt/cloudvpn-site/frontend;
     index index.html;
 
-    # Static files
     location /assets/ {
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
 
-    # API proxy
     location /api/ {
         proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_http_version 1.1;
     }
 
-    # SPA fallback
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files \$uri \$uri/ /index.html;
     }
+
+    error_page 404 /index.html;
 }
 NGINXEOF
 
@@ -119,24 +154,7 @@ rm -f /etc/nginx/sites-enabled/default 2>/dev/null
 
 # Get SSL certificate if not exists
 if [ ! -f /etc/letsencrypt/live/cloudvpn.best/fullchain.pem ]; then
-    # Start nginx with HTTP only first for cert challenge
-    cat > /tmp/nginx-http.conf << 'HTTPEOF'
-server {
-    listen 80;
-    server_name cloudvpn.best www.cloudvpn.best;
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-    location / {
-        return 200 'CloudVPN Setup';
-    }
-}
-HTTPEOF
-    cp /etc/nginx/sites-available/cloudvpn /tmp/cloudvpn-ssl-backup
-    cp /tmp/nginx-http.conf /etc/nginx/sites-available/cloudvpn
-    nginx -t && systemctl restart nginx
-    certbot certonly --webroot -w /var/www/certbot -d cloudvpn.best -d www.cloudvpn.best --non-interactive --agree-tos -m admin@cloudvpn.best || true
-    cp /tmp/cloudvpn-ssl-backup /etc/nginx/sites-available/cloudvpn
+    certbot certonly --webroot -w /var/www/certbot -d cloudvpn.best --non-interactive --agree-tos -m admin@cloudvpn.best || true
 fi
 
 # Start services
@@ -146,7 +164,6 @@ systemctl restart cloudvpn-web
 nginx -t && systemctl restart nginx
 
 echo "=== CloudVPN deployed successfully ==="
-echo "=== Site should be available at https://cloudvpn.best ==="
 REMOTE_SCRIPT
 
 echo "=== Deployment complete ==="
