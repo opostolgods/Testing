@@ -1,4 +1,6 @@
 """3X-UI API client for managing VPN keys on free and premium servers."""
+from __future__ import annotations
+
 import json
 import logging
 import random
