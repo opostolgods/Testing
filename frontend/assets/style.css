@@ -211,38 +211,69 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 /* Raycast-style diagonal light rays */
-.hero::before {
-  content: '';
+.hero-rays {
   position: absolute;
-  top: -30%;
-  left: -10%;
-  width: 120%;
-  height: 160%;
-  background:
-    linear-gradient(125deg, transparent 20%, rgba(255, 60, 60, 0.35) 30%, rgba(255, 100, 80, 0.25) 38%, transparent 45%),
-    linear-gradient(130deg, transparent 25%, rgba(255, 40, 40, 0.3) 35%, rgba(220, 50, 50, 0.2) 42%, transparent 50%),
-    linear-gradient(120deg, transparent 30%, rgba(255, 120, 80, 0.2) 40%, rgba(255, 80, 60, 0.15) 48%, transparent 55%),
-    linear-gradient(135deg, transparent 35%, rgba(180, 40, 60, 0.25) 45%, rgba(140, 30, 60, 0.15) 52%, transparent 58%),
-    linear-gradient(118deg, transparent 40%, rgba(60, 80, 180, 0.2) 50%, rgba(40, 60, 160, 0.15) 57%, transparent 63%),
-    linear-gradient(140deg, transparent 45%, rgba(80, 120, 220, 0.15) 55%, rgba(50, 80, 180, 0.1) 62%, transparent 68%),
-    linear-gradient(125deg, transparent 50%, rgba(200, 60, 80, 0.12) 58%, transparent 65%);
-  transform: rotate(-15deg);
+  inset: -100px;
   pointer-events: none;
   z-index: 0;
+  overflow: hidden;
 }
 
-.hero::after {
-  content: '';
+.hero-rays .ray {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(ellipse 80% 60% at 30% 40%, rgba(255, 50, 50, 0.08), transparent),
-    radial-gradient(ellipse 60% 50% at 70% 60%, rgba(40, 60, 160, 0.06), transparent);
-  pointer-events: none;
-  z-index: 0;
+  top: -40%;
+  height: 180%;
+  transform: rotate(-55deg);
+  transform-origin: center center;
+}
+
+.hero-rays .ray-1 {
+  left: 2%;
+  width: 180px;
+  background: linear-gradient(180deg, transparent 5%, rgba(255, 50, 30, 0.55) 25%, rgba(255, 60, 40, 0.65) 50%, rgba(255, 50, 30, 0.35) 75%, transparent 95%);
+  filter: blur(40px);
+}
+
+.hero-rays .ray-2 {
+  left: 12%;
+  width: 120px;
+  background: linear-gradient(180deg, transparent, rgba(255, 100, 50, 0.5) 20%, rgba(255, 80, 40, 0.6) 50%, rgba(200, 50, 30, 0.3) 80%, transparent);
+  filter: blur(25px);
+}
+
+.hero-rays .ray-3 {
+  left: 20%;
+  width: 150px;
+  background: linear-gradient(180deg, transparent, rgba(220, 35, 25, 0.45) 25%, rgba(255, 50, 30, 0.55) 50%, rgba(180, 30, 30, 0.25) 75%, transparent);
+  filter: blur(35px);
+}
+
+.hero-rays .ray-4 {
+  left: 30%;
+  width: 130px;
+  background: linear-gradient(180deg, transparent, rgba(255, 130, 80, 0.4) 20%, rgba(255, 90, 50, 0.5) 50%, rgba(220, 70, 40, 0.2) 80%, transparent);
+  filter: blur(30px);
+}
+
+.hero-rays .ray-5 {
+  left: 40%;
+  width: 160px;
+  background: linear-gradient(180deg, transparent, rgba(180, 30, 60, 0.4) 25%, rgba(160, 25, 55, 0.5) 50%, rgba(140, 20, 50, 0.2) 75%, transparent);
+  filter: blur(35px);
+}
+
+.hero-rays .ray-6 {
+  left: 52%;
+  width: 120px;
+  background: linear-gradient(180deg, transparent, rgba(50, 80, 220, 0.4) 20%, rgba(40, 70, 200, 0.5) 50%, rgba(30, 60, 180, 0.2) 80%, transparent);
+  filter: blur(30px);
+}
+
+.hero-rays .ray-7 {
+  left: 62%;
+  width: 140px;
+  background: linear-gradient(180deg, transparent, rgba(80, 110, 240, 0.3) 25%, rgba(60, 90, 220, 0.4) 50%, rgba(40, 70, 190, 0.15) 75%, transparent);
+  filter: blur(35px);
 }
 
 .hero-glow {
